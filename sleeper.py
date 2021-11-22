@@ -10,6 +10,8 @@ league = League(league_id)
 # users_to_names = league.map_users_to_team_name(users)
 
 def get_info(league):
+    #returns basic information about league
+    
     users = league.get_users()
     rosters = league.get_rosters()
     rosters_to_users = league.map_rosterid_to_ownerid(rosters)
@@ -17,6 +19,7 @@ def get_info(league):
     return users,rosters,rosters_to_users,users_to_names
 
 def print_scoreboards(league):
+    #prints every matchup of every week
     
     #setup
     users,rosters,rosters_to_users,users_to_names = get_info(league)
@@ -34,6 +37,7 @@ def print_scoreboards(league):
         print()
         
 def get_scorelists(league):
+    #returns a dict mapping team names to np array of scores
     
     #setup
     users,rosters,rosters_to_users,users_to_names = get_info(league)
@@ -51,12 +55,15 @@ def get_scorelists(league):
     return names_to_scores
             
 def get_schedules(league):
+    #returns a dict mapping team names to np array of strings representing schedule
     
     #setup
     users,rosters,rosters_to_users,users_to_names = get_info(league)
     names_to_scheds = {}
     for user,name in users_to_names.items():
         names_to_scheds[name] = np.array(range(14), dtype='<U16')
+        
+    #fill in schedules
     for i in range(1,15):
         matchups = league.get_matchups(i)
         matchups = sorted(matchups, key = lambda x:x["matchup_id"])
@@ -65,6 +72,7 @@ def get_schedules(league):
             team2 = users_to_names[rosters_to_users[matchups[j+1]["roster_id"]]]
             names_to_scheds[team1][i-1] = team2
             names_to_scheds[team2][i-1] = team1
+    
     return names_to_scheds
         
     
