@@ -1,16 +1,28 @@
 from sleeper_wrapper import League
+import numpy as np
 
 league_id = 723665944777388032
 league = League(league_id)
-users = league.get_users()
-rosters = league.get_rosters()
-standings = league.get_standings(rosters,users)
+# users = league.get_users()
+# rosters = league.get_rosters()
 
-rosters_to_users = league.map_rosterid_to_ownerid(rosters)
-users_to_names = league.map_users_to_team_name(users)
+# rosters_to_users = league.map_rosterid_to_ownerid(rosters)
+# users_to_names = league.map_users_to_team_name(users)
 
-def print_scoreboard(league):
-    for i in range(1,15):
+def get_info(league):
+    users = league.get_users()
+    rosters = league.get_rosters()
+    rosters_to_users = league.map_rosterid_to_ownerid(rosters)
+    users_to_names = league.map_users_to_team_name(users)
+    return users,rosters,rosters_to_users,users_to_names
+
+def print_scoreboards(league):
+    
+    #setup
+    users,rosters,rosters_to_users,users_to_names = get_info(league)
+    
+    #print matchups
+    for i in range(1,18):
         matchups = league.get_matchups(i)
         matchups = sorted(matchups, key = lambda x:x["matchup_id"])
         print(f"Week {i}")
@@ -23,27 +35,38 @@ def print_scoreboard(league):
         
 def get_scorelists(league):
     
-    #make a dictionary called names_to_scores from team names to empty np arrays
-    
-    for i in range(1,15):
+    #setup
+    users,rosters,rosters_to_users,users_to_names = get_info(league)
+    names_to_scores = {}
+    for user,name in users_to_names.items():
+        names_to_scores[name] = np.zeros(17)
+        
+    #fill in scores
+    for i in range(1,18):
         matchups = league.get_matchups(i)
-        print(f"Week {i}")
         for m in matchups:
-            #fill in arrays
-    #return the dict
+            name = users_to_names[rosters_to_users[m["roster_id"]]]
+            names_to_scores[name][i-1] = m["points"]
+        
+    return names_to_scores
             
 def get_schedules(league):
     
-    #make a dictionary called names_to_scheds from team names to empty np arrays
-    
+    #setup
+    users,rosters,rosters_to_users,users_to_names = get_info(league)
+    names_to_scheds = {}
+    for user,name in users_to_names.items():
+        names_to_scheds[name] = np.array(range(14), dtype='<U16')
     for i in range(1,15):
         matchups = league.get_matchups(i)
-        print(f"Week {i}")
-        for m in matchups:
-            #fill in arrays
-    #return the dict
+        matchups = sorted(matchups, key = lambda x:x["matchup_id"])
+        for j in range(0,12,2):
+            team1 = users_to_names[rosters_to_users[matchups[j]["roster_id"]]]
+            team2 = users_to_names[rosters_to_users[matchups[j+1]["roster_id"]]]
+            names_to_scheds[team1][i-1] = team2
+            names_to_scheds[team2][i-1] = team1
+    return names_to_scheds
         
     
-print_scoreboard(league)
     
     
