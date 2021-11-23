@@ -1,8 +1,8 @@
 from sleeper_wrapper import League
 import numpy as np
 
-league_id = 723665944777388032
-league = League(league_id)
+# league_id = 723665944777388032
+# league = League(league_id)
 # users = league.get_users()
 # rosters = league.get_rosters()
 
