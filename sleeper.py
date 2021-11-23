@@ -1,13 +1,13 @@
 from sleeper_wrapper import League
 import numpy as np
 
-# league_id = 723665944777388032
-# league = League(league_id)
-# users = league.get_users()
-# rosters = league.get_rosters()
+league_id = 723665944777388032
+league = League(league_id)
+users = league.get_users()
+rosters = league.get_rosters()
 
-# rosters_to_users = league.map_rosterid_to_ownerid(rosters)
-# users_to_names = league.map_users_to_team_name(users)
+rosters_to_users = league.map_rosterid_to_ownerid(rosters)
+users_to_names = league.map_users_to_team_name(users)
 
 def get_info(league):
     #returns basic information about league
@@ -50,7 +50,7 @@ def get_scorelists(league):
         matchups = league.get_matchups(i)
         for m in matchups:
             name = users_to_names[rosters_to_users[m["roster_id"]]]
-            names_to_scores[name][i-1] = m["points"]
+            names_to_scores[name][i-1] = np.sum(m["starters_points"])
         
     return names_to_scores
             
@@ -61,7 +61,7 @@ def get_schedules(league):
     users,rosters,rosters_to_users,users_to_names = get_info(league)
     names_to_scheds = {}
     for user,name in users_to_names.items():
-        names_to_scheds[name] = np.array(range(14), dtype='<U16')
+        names_to_scheds[name] = np.array(range(14), dtype='U30')
         
     #fill in schedules
     for i in range(1,15):
