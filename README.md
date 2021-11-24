@@ -21,3 +21,5 @@ To Do:
 Write results to output .csv
 
 Write function to automatically update the csv of scores with changed usernames and scores of the latest week
+
+Calculate playoff results
