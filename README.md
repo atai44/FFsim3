@@ -10,7 +10,7 @@ In console, call run_sim(N, week, names_to_scores, names_to_scheds, df) where N 
 
 Notes:
 
-Because Sleeper has a bug involving the changing of scoring settings, I use a .csv to get the scores. 
+Because Sleeper has a bug involving the changing of scoring settings, I use a .csv to get the scores. The .csv has team names in the first column and weekly scores in the rest of the columns, with 0s for weeks that have not happened yet. 
 
 Getting the schedules is very slow.
 
